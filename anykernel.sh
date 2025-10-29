@@ -9,7 +9,7 @@ do.devicecheck=0
 do.modules=0
 do.systemless=0
 do.cleanup=1
-do.cleanuponabort=0
+do.cleanuponabort=1
 device.name1=
 device.name2=
 device.name3=
@@ -29,6 +29,13 @@ no_magisk_check=1
 
 # import functions/variables and setup patching - see for reference (DO NOT REMOVE)
 . tools/ak3-core.sh
+
+## cmd output
+print_output() {
+    IFS=$'\n'
+    eval "$1" | while read line; do
+        ui_print "${line}"
+    done
 
 ## install additional module
 ui_print "Installing  module"
