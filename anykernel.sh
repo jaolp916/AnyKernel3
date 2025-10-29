@@ -27,15 +27,21 @@ ramdisk_compression=auto
 patch_vbmeta_flag=auto
 no_magisk_check=1
 
-# import functions/variables and setup patching - see for reference (DO NOT REMOVE)
-. tools/ak3-core.sh
-
 ## cmd output
 print_output() {
     IFS=$'\n'
     eval "$1" | while read line; do
         ui_print "${line}"
     done
+}
+
+## is recovery
+is_recovery() {
+    pgrep zygote && return 1 || return 0
+}
+
+# import functions/variables and setup patching - see for reference (DO NOT REMOVE)
+. tools/ak3-core.sh
 
 ## install additional module
 ui_print "Installing  module"
