@@ -35,13 +35,13 @@ print_output() {
     done
 }
 
-## is recovery
-is_recovery() {
-    pgrep zygote && return 1 || return 0
-}
-
 # import functions/variables and setup patching - see for reference (DO NOT REMOVE)
 . tools/ak3-core.sh
+
+# boot install
+split_boot
+flash_boot
+## end boot install
 
 ## install additional module
 ui_print "Installing  module"
@@ -68,16 +68,6 @@ else
     abort "No module system not found"
 fi
 
-
-# boot install
-split_boot
-if [ -f "split_img/ramdisk.cpio" ]; then
-    unpack_ramdisk
-    write_boot
-else
-    flash_boot
-fi
-## end boot install
 
 ui_print "   GKI 系列内核        ";
 ui_print "   Kernel by Jianke   ";
