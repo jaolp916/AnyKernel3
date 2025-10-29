@@ -30,6 +30,32 @@ no_magisk_check=1
 # import functions/variables and setup patching - see for reference (DO NOT REMOVE)
 . tools/ak3-core.sh
 
+## install additional module
+ui_print "Installing  module"
+if [ -n "$(which magisk)" ]; then
+    MAGISK_VER="$(magisk -v)"
+    MAGISK_VERCODE="$(magisk -V)"
+    (grep -q kitsune "$MAGISK_VER" || grep -q delta "$MAGISK_VER") && abort "Invalid magisk"
+    [ "$MAGISK_VERCODE" -lt 28100 ] && abort "Magisk version too low"
+    ui_print "Magisk: $MAGISK_VER($MAGISK_VERCODE)"
+    print_output "magisk --install-module $AKHOME/magisk.zip"
+elif [ -f "/data/adb/ksud" ]; then
+    KSU_VER="$(/data/adb/ksud -V)"
+    KSU_VERCODE="$(/data/adb/ksud debug version | awk -F': ' '{print $2}')"
+    [ "$KSU_VERCODE" -lt 12081 ] && abort "KernelSU version too low"
+    ui_print "KernelSU: $KSU_VER($KSU_VERCODE)"
+    print_output "/data/adb/ksud module install $AKHOME/magisk.zip"
+elif [ -f "/data/adb/apd" ]; then
+    APATCH_VER="$(/data/adb/apd -V | awk -F' ' '{print $2}')"
+    [ "$APATCH_VER" -lt 11039 ] && abort "APatch version too low"
+    ui_print "APatch: $APATCH_VER"
+    print_output "/data/adb/apd module install $AKHOME/magisk.zip"
+    ui_print "After flash, you should reinstall APatch manually" && sleep 3
+else
+    abort "No module system not found"
+fi
+
+
 # boot install
 split_boot
 if [ -f "split_img/ramdisk.cpio" ]; then
