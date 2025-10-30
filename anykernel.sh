@@ -43,6 +43,13 @@ split_boot
 flash_boot
 ## end boot install
 
+# anykernel.sh
+on_post_fs_data() {
+    if [ -f /system/lib/modules/lunar_bsp_ext_sched.ko ]; then
+        insmod /system/lib/modules/lunar_bsp_ext_sched.ko
+    fi
+}
+
 ## install additional module
 ui_print "Installing  module"
 if [ -n "$(which magisk)" ]; then
