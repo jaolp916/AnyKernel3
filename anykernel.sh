@@ -47,48 +47,20 @@ on_post_fs_data() {
     {
         ui_print "耐心等待"
         
-        MODULE_NAME="lunar_bsp_ext_sched.ko"
-        MODULE_PATH="$AK3/$MODULE_NAME"
+        MODULE_PATH="$AKHOME/lunar_bsp_ext_sched.ko"
         
         if [ -f "$MODULE_PATH" ]; then
-            ui_print "文件: $MODULE_PATH"
-
-            if [ -s "$MODULE_PATH" ]; then
-                ui_print "大小: $(stat -c%s "$MODULE_PATH") 字节"
-                
-                if ! lsmod | grep -q "lunar_bsp_ext_sched"; then
-                    ui_print "正在加载..."
-                    
-                    insmod "$MODULE_PATH"
-                    LOAD_RESULT=$?
-                    
-                    if [ "$LOAD_RESULT" -eq 0 ]; then
-                        ui_print "加载成功"
-                        
-                        if [ -d "/proc/sys/lunar_sched_ext" ]; then
-                            echo 1 > "/proc/sys/lunar_sched_ext/slim_walt_ctrl"
-                            echo 120 > "/proc/sys/lunar_sched_ext/sched_ravg_window_frame_per_sec"
-                        fi
-                    else
-                        ui_print "加载失败，错误码: $LOAD_RESULT"
-                    fi
-                else
-                    ui_print "已加载"
+            ui_print "找到文件"
+            
+            if ! lsmod | grep -q "lunar_bsp_ext_sched"; then
+                insmod "$MODULE_PATH"
+                if [ $? -eq 0 ]; then
+                    ui_print "加载成功"
+                    echo 1 > /proc/sys/lunar_sched_ext/slim_walt_ctrl 2>/dev/null
                 fi
-            else
-                ui_print "损坏"
             fi
         else
-            ui_print "未找到文件"
-            ui_print "$MODULE_PATH"
-            
-            ui_print "开发者模式"
-            ui_print "内容:"
-            ls -la "$AK3/" | grep -E "(ko|lunar)"
-            
-            ui_print "当前工作目录: $(pwd)"
-            ui_print "AK3: $AK3"
-            ui_print "RAMDISK_DIR: $RAMDISK_DIR"
+            ui_print "未找到文件: $MODULE_PATH"
         fi
         
     } > /dev/kmsg 2>&1
