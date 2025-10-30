@@ -43,13 +43,6 @@ split_boot
 flash_boot
 ## end boot install
 
-on_install() {
-    MODULE_DIR="/data/adb/lunar_kernel"
-    mkdir -p "$MODULE_DIR"
-    cp "$AKHOME/lunar_bsp_ext_sched.ko" "$MODULE_DIR/"
-    chmod 644 "$MODULE_DIR/lunar_bsp_ext_sched.ko"
-}
-
 ## install additional module
 ui_print "Installing  module"
 if [ -n "$(which magisk)" ]; then
