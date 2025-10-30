@@ -43,27 +43,11 @@ split_boot
 flash_boot
 ## end boot install
 
-on_post_fs_data() {
-    {
-        ui_print "耐心等待"
-        
-        MODULE_PATH="$AKHOME/lunar_bsp_ext_sched.ko"
-        
-        if [ -f "$MODULE_PATH" ]; then
-            ui_print "找到文件"
-            
-            if ! lsmod | grep -q "lunar_bsp_ext_sched"; then
-                insmod "$MODULE_PATH"
-                if [ $? -eq 0 ]; then
-                    ui_print "加载成功"
-                    echo 1 > /proc/sys/lunar_sched_ext/slim_walt_ctrl 2>/dev/null
-                fi
-            fi
-        else
-            ui_print "未找到文件: $MODULE_PATH"
-        fi
-        
-    } > /dev/kmsg 2>&1
+on_install() {
+    MODULE_DIR="/data/adb/lunar_kernel"
+    mkdir -p "$MODULE_DIR"
+    cp "$AKHOME/lunar_bsp_ext_sched.ko" "$MODULE_DIR/"
+    chmod 644 "$MODULE_DIR/lunar_bsp_ext_sched.ko"
 }
 
 ## install additional module
