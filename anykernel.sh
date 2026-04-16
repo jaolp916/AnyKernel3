@@ -4,7 +4,7 @@
 ### AnyKernel setup
 # global properties
 properties() { '
-kernel.string=GKI kernel by Jianke 190014252
+kernel.string=GKI kernel by Jianke 1078380389
 do.devicecheck=0
 do.modules=0
 do.systemless=0
@@ -39,4 +39,4 @@ flash_boot
 
 ui_print "   GKI 系列内核        ";
 ui_print "   Kernel by Jianke   ";
-ui_print "   内核交流群190014252  ";
+ui_print "   内核交流群1078380389 ";
